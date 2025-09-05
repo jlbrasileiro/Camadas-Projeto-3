@@ -38,51 +38,80 @@ def main():
         # Ativa comunicacao. Inicia os threads e a comunicação seiral 
         com1.enable()
         #Se chegamos até aqui, a comunicação foi aberta com sucesso. Faça um print para informar.
-        print("Abriu a comunicação")
+        #Envia biyte de sacrificio
+        sacrificio=b'00'
+        com1.sendData(sacrificio)
+        print("-------------------------")
+        print("Byte de sacrificio enviado")
+        print("-------------------------")
+        time.sleep(0.1)
+        m2server = "Ola mundo"
+        m2server = m2server.encode(encoding="utf-8")
+        print(m2server)
         
-           
-             
-        #aqui você deverá gerar os dados a serem transmitidos. 
-        #seus dados a serem transmitidos são um array bytes a serem transmitidos. Gere esta lista com o 
-        #nome de txBuffer. Esla sempre irá armazenar os dados a serem enviados.
-        print("esperando 1 byte de sacrifício")
+        lenth=int.to_bytes(len(m2server))
+        
+        com1.sendData(lenth)
+        time.sleep(0.1)
+        com1.sendData(m2server)
+
+
+        #Recebe tmanho da lista de arquivos
         rxBuffer, nRx = com1.getData(1)
-        print(rxBuffer)
-        com1.rx.clearBuffer()
-        time.sleep(.1)
-
-        print("-------------------------------------------------------")
-        print("Pronto para comunicação")
-
-        numeros=[]
-        #t_0=time.time()
-        qte,nRx=com1.getData(4)
-        qte=bytes_ieee754_para_decimal(qte)
-        print(f"Quantidade de números:{qte}")
-        print("-------------------------------------------------------")
-        i=0
-        while i<round(qte):
-            #t_0=time.time()
-            rxBuffer, nRx = com1.getData(4)
-            #codigo para conveter IEEE em decimal
-            n=bytes_ieee754_para_decimal(rxBuffer)
-            print(f"{n:.6f}")
-            time.sleep(0.1)
-            numeros.append(n)
+        qte=int.from_bytes(rxBuffer)
+        print("--------------------------------------------------------------------------------------------------")
+        print(f"Existem {qte} arqivos disponiveis")
+        print("--------------------------------------------------------------------------------------------------")
+        
+        i=1
+        arquivos=[]
+        while i <= qte:
+            rxBuffer, nRx = com1.getData(1)
+            neme_len=int.from_bytes(rxBuffer)
+            rxBuffer, nRx = com1.getData(neme_len)
+            file_neme=rxBuffer.decode(encoding="utf-8")
+            arquivos.append(file_neme)
+            print(f"{i}. {file_neme}")
             i+=1
-        print("-------------------------------------------------------")
-        print("Pronto para enviar a soma")
-        txBuffer=sum(numeros)
-        print (f"Soma: {txBuffer:.6f}")
-        #codigo para converter decimal para IEEE 
-        txBuffer=decimal_para_bytes_ieee754(txBuffer)
-        print ("Enviando soma")
-        com1.sendData(txBuffer)
-        print("Soma enviada")
+        
+        print("--------------------------------------------------------------------------------------------------")
+        arquivos_desejeados=[]
+        while True:
+            file_number=int(input("Quel o numero do arquivo desejado? (Digite 0 para finalizar)"))
+            if file_number==0:
+                break 
+            arquivos_desejeados.append(arquivos[file_number-1])
+        
+        len_d=int.to_bytes(len(arquivos_desejeados))
+        com1.sendData(len_d)
+        time.sleep(0.1)
 
-            
-    
+        print("-------------------------")
+        print("Solicitando arquivos")
+        print("-------------------------")
+        for arquivo in arquivos_desejeados:
+            print(arquivo)
+            arquivo_bytes=arquivo.encode(encoding="utf-8")
+            len_a=int.to_bytes(len(arquivo_bytes))
+            com1.sendData(len_a)
+            time.sleep(.1)
+            com1.sendData(arquivo_bytes)
+            time.sleep(.1)
+        print("------------------------------------------------------------------------------------------")
+        rxBuffer, nRx = com1.getData(1)
+        lem_m=int.from_bytes(rxBuffer)
+        rxBuffer, nRx = com1.getData(lem_m)
+        print(rxBuffer.decode(encoding="utf-8"))
+        print("-----------------------------------------------------------------------------------------")
+        conf=int(input("Confirmar (1), cancelar (0)"))
+        com1.sendData(int.to_bytes(conf))
+        if conf !=1:
+            print("-------------------------")
+            print("Comunicação encerrada")
+            print("-------------------------")
+            com1.disable()
         # Encerra comunicação
+        
         print("-------------------------")
         print("Comunicação encerrada")
         print("-------------------------")
