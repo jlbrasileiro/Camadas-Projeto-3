@@ -4,5 +4,19 @@ def dividir(arquivo):
 
 
 def cria_pacote(index:int,total:int,nPacote:int,payload):
-    index=index()
+    if nPacote>total:
+        pass
+
+    index = index.to_bytes()
+    pkg_len = payload.len()
+    pkg_len = pkg_len.to_bytes()
+    total = total.to_bytes()
+    nPacote = nPacote.to_bytes()
+
+    free = b"00"
+    conf = 42
+    conf = conf.to_bytes()
+
+    pacote = index+pkg_len+total+nPacote+free*3+payload+conf*3
+    
     return pacote
