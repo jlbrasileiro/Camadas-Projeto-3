@@ -14,6 +14,7 @@ from enlace import *
 import time
 import numpy as np
 import struct
+from  preparar import dividir
 serialName = "COM5"                  # Windows(variacao de)  detectar sua porta e substituir aqui
 
 
@@ -21,6 +22,7 @@ def main():
     try:
         # imageR = "./imgs/image.png"
         print("Iniciou o main")
+        print(np.asanyarray(imagem1))
         #declaramos um objeto do tipo enlace com o nome "com". Essa é a camada inferior à aplicação. Observe que um parametro
         #para declarar esse objeto é o nome da porta.
         com1 = enlace(serialName)
@@ -98,6 +100,13 @@ def main():
         podemandar=int.from_bytes(podemandar)
         if podemandar==1:
             print("vaicontinuae")
+            dicio = {}
+            for nome  in listaString:
+                if  nome=="whatsapp":
+                    codigo = "imgs\imgs\whatsapp.png"
+                elif nome=="youtube":
+                    
+                elif nome=="youtubeUm":
         #as array apenas como boa pratica para casos de ter uma outra forma de dados
             tempo0 = time.time()
             timeout=False
