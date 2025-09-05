@@ -14,7 +14,7 @@ from enlace import *
 import time
 import numpy as np
 import struct
-from  preparar import dividir
+from  preparar import dividir, cria_pacote
 serialName = "COM5"                  # Windows(variacao de)  detectar sua porta e substituir aqui
 
 
@@ -22,7 +22,6 @@ def main():
     try:
         # imageR = "./imgs/image.png"
         print("Iniciou o main")
-        print(np.asanyarray(imagem1))
         #declaramos um objeto do tipo enlace com o nome "com". Essa é a camada inferior à aplicação. Observe que um parametro
         #para declarar esse objeto é o nome da porta.
         com1 = enlace(serialName)
@@ -40,18 +39,21 @@ def main():
         rx, nrx = com1.getData(tamanho)
         print(rx)
         # Ativa comunicacao. Inicia os threads e a comunicação seiral 
-        txBuffer=int.to_bytes(3)
+        txBuffer=int.to_bytes(4)
         com1.sendData(txBuffer)
         time.sleep(.1)
         arquivo1="whatsapp"
         arquivo2="youtube"
         arquivo3="youtubeUm"
+        arquivo4="fruta"
         arquivo1Bytes=arquivo1.encode('utf-8')
         tamanho1=int.to_bytes(len(arquivo1Bytes)) 
         arquivo2Bytes=arquivo2.encode('utf-8')
         tamanho2=int.to_bytes(len(arquivo2Bytes))        
         arquivo3Bytes=arquivo3.encode('utf-8')
         tamanho3=int.to_bytes(len(arquivo3Bytes))
+        arquivo4Bytes=arquivo4.encode('utf-8')
+        tamanho4=int.to_bytes(len(arquivo4Bytes))
         com1.sendData(tamanho1)
         time.sleep(.1)
         com1.sendData(arquivo1Bytes)
@@ -64,6 +66,9 @@ def main():
         time.sleep(.1)
         com1.sendData(arquivo3Bytes)
         time.sleep(.1)
+        com1.sendData(tamanho4)
+        time.sleep(.1)
+        com1.sendData(arquivo4Bytes)
         time.sleep(.1)
         
         # rebendo qual
@@ -87,7 +92,7 @@ def main():
         for i in lista:
             palavra=i.decode(encoding="utf-8")
             print("-------------------------")
-            print(palavra)
+            print(f"palavra{palavra}")
             listaString.append(palavra)
         mandando=f"Arquivos selecionados: {listaString}\n mandando..."
         mandando=mandando.encode('utf-8')
@@ -102,11 +107,38 @@ def main():
             print("vaicontinuae")
             dicio = {}
             for nome  in listaString:
+                print(f"nome{nome}")
                 if  nome=="whatsapp":
-                    codigo = "imgs\imgs\whatsapp.png"
+                    codigo = dividir("imgs\\whatsapp.png")
+                    dicio[0]=codigo
                 elif nome=="youtube":
-                    
+                    codigo = dividir("imgs\\Youtube.png")
+                    dicio[1]=codigo
                 elif nome=="youtubeUm":
+                    codigo = dividir("imgs\\youtube1.jpg")
+                    dicio[2]=codigo
+                elif nome=="Fruta":
+                    codigo = dividir("imgs\\Fruta.png")
+                    dicio[3]=codigo
+            print(dicio.keys())
+        max=0
+        for a,t in dicio:
+            if len[t]>max:
+                max=len(t)
+        i=0
+        print(f"max{max}")    
+        while True:
+            if i>max:
+                break
+            for arquivo,n in dicio:
+                print(f"nome {arquivo}, tamanho {len(n)}")
+                if i>len(n):
+                    pass
+                pacote=cria_pacote(arquivo,len(n),i,n[i])
+                com1.sendData(pacote)
+                time.sleep(.1)
+            i+=1
+            break
         #as array apenas como boa pratica para casos de ter uma outra forma de dados
             tempo0 = time.time()
             timeout=False
