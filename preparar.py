@@ -6,11 +6,10 @@ def dividir(arquivo):
 def cria_pacote(index:int,total:int,nPacote:int,payload):
     if nPacote>total:
         pass
-
     index = index.to_bytes()
-    pkg_len = payload.len()
+    pkg_len = len(payload)
     pkg_len = pkg_len.to_bytes()
-    total = total.to_bytes()
+    total = total.to_bytes(4)
     nPacote = nPacote.to_bytes()
 
     free = b"00"

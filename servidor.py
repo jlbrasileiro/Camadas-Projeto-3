@@ -44,7 +44,7 @@ def main():
         time.sleep(.1)
         arquivo1="whatsapp"
         arquivo2="youtube"
-        arquivo3="youtubeUm"
+        arquivo3="oiii"
         arquivo4="fruta"
         arquivo1Bytes=arquivo1.encode('utf-8')
         tamanho1=int.to_bytes(len(arquivo1Bytes)) 
@@ -104,41 +104,50 @@ def main():
         podemandar,n = com1.getData(1)
         podemandar=int.from_bytes(podemandar)
         if podemandar==1:
+            print("-------------------------\n")
             print("vaicontinuae")
             dicio = {}
+            # print(dividir("imgs\\whatsapp.png"))
             for nome  in listaString:
                 print(f"nome{nome}")
                 if  nome=="whatsapp":
                     codigo = dividir("imgs\\whatsapp.png")
-                    dicio[0]=codigo
+                    dicio['0']=codigo
                 elif nome=="youtube":
                     codigo = dividir("imgs\\Youtube.png")
-                    dicio[1]=codigo
-                elif nome=="youtubeUm":
-                    codigo = dividir("imgs\\youtube1.jpg")
-                    dicio[2]=codigo
+                    dicio['1']=codigo
+                elif nome=="oiii":
+                    codigo = dividir("imgs\\oiii.png")
+                    dicio['2']=codigo
                 elif nome=="Fruta":
                     codigo = dividir("imgs\\Fruta.png")
-                    dicio[3]=codigo
-            print(dicio.keys())
-        max=0
-        for a,t in dicio:
-            if len[t]>max:
-                max=len(t)
-        i=0
-        print(f"max{max}")    
-        while True:
-            if i>max:
-                break
-            for arquivo,n in dicio:
-                print(f"nome {arquivo}, tamanho {len(n)}")
-                if i>len(n):
-                    pass
-                pacote=cria_pacote(arquivo,len(n),i,n[i])
-                com1.sendData(pacote)
-                time.sleep(.1)
-            i+=1
-            break
+                    dicio['3']=codigo
+            # print(dicio.keys())
+            max=0
+            for n,t in dicio.items():
+                print(f"arquivo{n}, cont{len(t)}")
+                if len(t)>max:
+                    max=len(t)
+            i=0
+            print(f"max{max}")    
+            while True:
+                print("foi primeiro loop")
+                if i>=max:
+                    break
+                for arquivo,n in dicio.items():
+                    # print("-------------------------\n")
+                    # print(f"nome {arquivo}, tamanho {len(n)}")
+                    if i>=len(n):
+                        pass
+                    else:
+                        print("-------------------------\n")
+                        print(f"index {i}, tamanho {len(n)}")   
+                        pacote=cria_pacote(int(arquivo),len(n),i,n[i])
+                        com1.sendData(pacote)
+                        time.sleep(.1)
+                i+=1
+                # break
+            print("terminou os loops")
         #as array apenas como boa pratica para casos de ter uma outra forma de dados
             tempo0 = time.time()
             timeout=False
