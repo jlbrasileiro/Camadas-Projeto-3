@@ -129,23 +129,28 @@ def main():
                 if len(t)>max:
                     max=len(t)
             i=0
-            print(f"max{max}")    
-            while True:
-                print("foi primeiro loop")
-                if i>=max:
-                    break
-                for arquivo,n in dicio.items():
-                    # print("-------------------------\n")
-                    # print(f"nome {arquivo}, tamanho {len(n)}")
-                    if i>=len(n):
-                        pass
-                    else:
-                        print("-------------------------\n")
-                        print(f"index {i}, tamanho {len(n)}")   
-                        pacote=cria_pacote(int(arquivo),len(n),i,n[i])
-                        com1.sendData(pacote)
-                        time.sleep(.1)
-                i+=1
+            print(f"max{max}")
+            exemplo = dicio["3"]
+            pacote=cria_pacote(3,len(dicio["3"]),1,exemplo[0])
+            com1.sendData(pacote)
+            time.sleep(.1)    
+            # while True:
+            #     print("foi primeiro loop")
+            #     if i>=max:
+            #         break
+            #     for arquivo,n in dicio.items():
+            #         # print("-------------------------\n")
+            #         # print(f"nome {arquivo}, tamanho {len(n)}")
+            #         if i>=len(n):
+            #             pass
+            #         else:
+            #             print("-------------------------\n")
+            #             print(f"index {i}, tamanho {len(n)}")   
+            #             pacote=cria_pacote(int(arquivo),len(n),i,n[i])
+            #             com1.sendData(pacote)
+            #             time.sleep(.1)
+                        
+            #     i+=1
                 # break
             print("terminou os loops")
         #as array apenas como boa pratica para casos de ter uma outra forma de dados

@@ -11,14 +11,14 @@ def cria_pacote(index:int,total:int,nPacote:int,payload):
     index = index.to_bytes()
     pkg_len = len(payload)
     pkg_len = pkg_len.to_bytes()
-    total = total.to_bytes(4)
-    nPacote = nPacote.to_bytes()
+    total = total.to_bytes(2)
+    nPacote = nPacote.to_bytes(2)
 
     free = b"00"
     conf = 42
     conf = conf.to_bytes()
 
-    pacote = index+pkg_len+total+nPacote+free*3+payload+conf*3
+    pacote = index+pkg_len+total+nPacote+free*4+payload+conf*3
     
     return pacote
 
