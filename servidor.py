@@ -130,8 +130,9 @@ def main():
                     max=len(t)
             i=0
             print(f"max{max}")
-            exemplo = dicio["3"]
-            pacote=cria_pacote(3,len(dicio["3"]),1,exemplo[0])
+            exemplo = dicio["2"]
+            pacote=cria_pacote(0,len(dicio["2"]),1,exemplo[0])
+            print(pacote)
             com1.sendData(pacote)
             time.sleep(.1)    
             # while True:
