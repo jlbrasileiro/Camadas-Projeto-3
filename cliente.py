@@ -112,13 +112,50 @@ def main():
             print("-------------------------")
             com1.disable()
 
-        index,payload,total,numero,correto=extrai_pacote(com1=com1,lista_desejados=arquivos_desejeados)
-        # Encerra comunicação
-        print(index)
-        print(numero)
-        print(correto)
-        pacote=cria_pacote(index=index,total=total,nPacote=numero)
-        com1.sendData(pacote)
+        payloads=[]
+        arquivos_completos=0
+        start=time.time()
+        pacote=cria_pacote(index=1,total=0,nPacote=0,payload=b'00')
+        while True:
+            while True:
+                buffer_len=com1.rx.getBufferLen()
+                now=time.time()
+                if (now-start>1) and buffer_len<10:
+                    com1.sendData(pacote)
+                    start=time.time()
+                elif buffer_len>=10:
+                    break
+        
+            index,payload,total,numero,correto=extrai_pacote(com1=com1)
+            # Encerra comunicação
+            print(index)
+            print(numero)
+            print(total)
+            print(correto)
+
+            if numero==1 and correto==True:
+                payloads.append(payload)
+
+            elif total>=numero and correto==True:
+                payloads[index]=payloads[index]+payload
+            #envia se foi correto
+            if numero==total and correto==True:
+                arquivos_completos+=1
+                print (f'Progresso {arquivos_desejeados[index]}: Completo')
+
+            if correto==True:
+                pacote=cria_pacote(index=1,total=0,nPacote=numero,payload=b'00')
+                com1.sendData(pacote)
+                start=time.time()
+                print (f'Progresso {arquivos_desejeados[index]}: {100*numero/total}%')
+            else:
+                pacote=cria_pacote(index=0,total=0,nPacote=numero,payload=b'00')
+                com1.sendData(pacote)
+            
+            if len(arquivos_desejeados)==arquivos_completos:
+                break
+        
+        print(payloads)
         print("-------------------------")
         print("Comunicação encerrada")
         print("-------------------------")
