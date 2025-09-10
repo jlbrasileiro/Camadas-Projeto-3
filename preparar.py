@@ -2,7 +2,11 @@ from enlace import *
 
 def dividir(arquivo):
     arquivo1=open(arquivo,"rb").read()
-    return [arquivo1[i:i+100] for i in range(0, len(arquivo1),100)]
+    print(f"---------------------------------\n\n\n\narquvio tem tamanho {len(arquivo1)}\n\n--------------------------")
+    if len(arquivo1)>100:
+        return [arquivo1[i:i+100] for i in range(0, len(arquivo1),100)]
+    else:
+        return [arquivo1[i:i+50] for i in range(0, len(arquivo1),50)]
 
 
 def cria_pacote(index:int,total:int,nPacote:int,payload):

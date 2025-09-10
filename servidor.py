@@ -45,7 +45,7 @@ def main():
         arquivo1="whatsapp"
         arquivo2="youtube"
         arquivo3="oiii"
-        arquivo4="fruta"
+        arquivo4="Fruta"
         arquivo1Bytes=arquivo1.encode('utf-8')
         tamanho1=int.to_bytes(len(arquivo1Bytes)) 
         arquivo2Bytes=arquivo2.encode('utf-8')
@@ -128,7 +128,7 @@ def main():
                 print(f"arquivo{n}, cont{len(t)}")
                 if len(t)>max:
                     max=len(t)
-            i=1
+            i=0
             print(f"max{max}")
             # exemplo = dicio["2"]
             # pacote=cria_pacote(0,len(dicio["2"]),1,exemplo[0])
@@ -149,7 +149,7 @@ def main():
                         print("-------------------------\n")
                         print(f"index {i}, tamanho {len(n)}")   
                         print(com1.rx.getBufferLen)            
-                        pacote=cria_pacote(a,len(n),i,n[i])
+                        pacote=cria_pacote(a,len(n),i+1,n[i])
                         com1.sendData(pacote)
                         time.sleep(.1)
                         tempoInicial = time.time()
@@ -158,10 +158,10 @@ def main():
                         index, payload, total, numero, correto = extrai_pacote(com1=com1)
                         print(com1.rx.getBufferLen)
                         print(f"index1 {index}")            
-                        if (index == 0) or (numero != i):
+                        if (index == 0) or (numero != (i+1)):
                             while True:
                                 i =numero
-                                pacote=cria_pacote(a,len(n),i,n[i])
+                                pacote=cria_pacote(a,len(n),i+1,n[i])
                                 com1.sendData(pacote)
                                 time.sleep(.1)
                                 index, payload, total, numero, correto = extrai_pacote(com1=com1)            
