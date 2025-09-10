@@ -14,7 +14,7 @@ from enlace import *
 import time
 import numpy as np
 import struct
-from  preparar import dividir, cria_pacote
+from  preparar import dividir, cria_pacote, extrai_pacote
 serialName = "COM5"                  # Windows(variacao de)  detectar sua porta e substituir aqui
 
 
@@ -128,30 +128,54 @@ def main():
                 print(f"arquivo{n}, cont{len(t)}")
                 if len(t)>max:
                     max=len(t)
-            i=0
+            i=1
             print(f"max{max}")
-            exemplo = dicio["2"]
-            pacote=cria_pacote(0,len(dicio["2"]),1,exemplo[0])
-            print(pacote)
-            com1.sendData(pacote)
-            time.sleep(.1)    
-            # while True:
-            #     print("foi primeiro loop")
-            #     if i>=max:
-            #         break
-            #     for arquivo,n in dicio.items():
-            #         # print("-------------------------\n")
-            #         # print(f"nome {arquivo}, tamanho {len(n)}")
-            #         if i>=len(n):
-            #             pass
-            #         else:
-            #             print("-------------------------\n")
-            #             print(f"index {i}, tamanho {len(n)}")   
-            #             pacote=cria_pacote(int(arquivo),len(n),i,n[i])
-            #             com1.sendData(pacote)
-            #             time.sleep(.1)
+            # exemplo = dicio["2"]
+            # pacote=cria_pacote(0,len(dicio["2"]),1,exemplo[0])
+            # print(pacote)
+            # com1.sendData(pacote)
+            # time.sleep(.1)    
+            while True:
+                # print("foi primeiro loop")
+                if i>max:
+                    break
+                a=0
+                for arquivo,n in dicio.items():
+                    # print("-------------------------\n")
+                    # print(f"nome {arquivo}, tamanho {len(n)}")
+                    if i>=len(n):
+                        pass
+                    else:
+                        print("-------------------------\n")
+                        print(f"index {i}, tamanho {len(n)}")   
+                        print(com1.rx.getBufferLen)            
+                        pacote=cria_pacote(a,len(n),i,n[i])
+                        com1.sendData(pacote)
+                        time.sleep(.1)
+                        tempoInicial = time.time()
+                        tempoFinal = time.time()
+                        print(tempoFinal)
+                        index, payload, total, numero, correto = extrai_pacote(com1=com1)
+                        print(com1.rx.getBufferLen)
+                        print(f"index1 {index}")            
+                        if (index == 0) or (numero != i):
+                            while True:
+                                i =numero
+                                pacote=cria_pacote(a,len(n),i,n[i])
+                                com1.sendData(pacote)
+                                time.sleep(.1)
+                                index, payload, total, numero, correto = extrai_pacote(com1=com1)            
+                                print(f"index2 {index}")
+                                if index == 1:
+                                    break 
+                        elif index ==1:
+                            a+=1
+                            index=3
+                            print(f"index3 {index}")
+                            com1.rx.clearBuffer()
+                            pass
                         
-            #     i+=1
+                i+=1
                 # break
             print("terminou os loops")
         #as array apenas como boa pratica para casos de ter uma outra forma de dados
