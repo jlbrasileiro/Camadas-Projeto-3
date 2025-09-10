@@ -141,7 +141,7 @@ def main():
             #envia se foi correto
             if numero==total and correto==True:
                 arquivos_completos+=1
-                print (f'Progresso {arquivos_desejeados[index]}: Completo')
+                print (f'Progresso {arquivos_desejeados[index]}: Completo!')
 
             if correto==True:
                 pacote=cria_pacote(index=1,total=0,nPacote=numero,payload=b'00')
@@ -154,8 +154,23 @@ def main():
             
             if len(arquivos_desejeados)==arquivos_completos:
                 break
+        print("------------------------------------------------------------------------------------------------------------")
+        print("Todos os arquivos recebidos com sucesso!!")
+        print("Iniciando converção e salvamento")
+        print("------------------------------------------------------------------------------------------------------------")
+        #print(payloads)
         
-        print(payloads)
+        i=0
+        while i<len(arquivos_desejeados):
+            arquivo="./imgs/"+arquivos_desejeados[i]+".png"
+            print(arquivo)
+            f=open(arquivo, "wb")
+            payload=payloads[i]
+            f.write(payload)
+            f.close()
+            i+=1
+        
+        print("Arquivos salvos")
         print("-------------------------")
         print("Comunicação encerrada")
         print("-------------------------")
