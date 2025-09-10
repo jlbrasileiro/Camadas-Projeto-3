@@ -13,6 +13,7 @@
 from enlace import *
 import time
 import numpy as np
+from preparar import extrai_pacote,cria_pacote
 from conversores import decimal_para_bytes_ieee754, bytes_ieee754_para_decimal
 
 # voce deverá descomentar e configurar a porta com através da qual ira fazer comunicaçao
@@ -110,8 +111,14 @@ def main():
             print("Comunicação encerrada")
             print("-------------------------")
             com1.disable()
+
+        index,payload,total,numero,correto=extrai_pacote(com1=com1,lista_desejados=arquivos_desejeados)
         # Encerra comunicação
-        
+        print(index)
+        print(numero)
+        print(correto)
+        pacote=cria_pacote(index=index,total=total,nPacote=numero)
+        com1.sendData(pacote)
         print("-------------------------")
         print("Comunicação encerrada")
         print("-------------------------")

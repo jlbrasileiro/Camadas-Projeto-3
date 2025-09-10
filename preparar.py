@@ -23,7 +23,7 @@ def cria_pacote(index:int,total:int,nPacote:int,payload):
     
     return pacote
 
-def extrai_pacote(com1:enlace,lista_desejados):
+def extrai_pacote(com1:enlace):
     #Extrai o head
      index_arq,n = com1.getData(1)
      pkg_len,n = com1.getData(1)
@@ -50,6 +50,5 @@ def extrai_pacote(com1:enlace,lista_desejados):
              correto = False
          i+=1
     
-     nome_arq = lista_desejados[index_arq]
-     nome_arq = nome_arq+".png"
-     return nome_arq, payload, n_pkg, correto
+    
+     return index_arq, payload,t_pkg, n_pkg, correto
