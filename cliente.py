@@ -144,13 +144,13 @@ def main():
                 print (f'Progresso {arquivos_desejeados[index]}: Completo!')
 
             if correto==True:
-                pacote=cria_pacote(index=1,total=0,nPacote=numero,payload=b'00')
+                pacote=cria_pacote(index=1,total=index,nPacote=numero,payload=b'00')
                 com1.sendData(pacote)
                 start=time.time()
                 print (f'Progresso {arquivos_desejeados[index]}: {100*numero/total}%')
                 print("------------------------------------------------------------------------------------------------------------")
             else:
-                pacote=cria_pacote(index=0,total=0,nPacote=numero,payload=b'00')
+                pacote=cria_pacote(index=0,total=total,nPacote=numero,payload=b'00')
                 com1.sendData(pacote)
             
             if len(arquivos_desejeados)==arquivos_completos:
