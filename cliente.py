@@ -127,11 +127,11 @@ def main():
                     break
         
             index,payload,total,numero,correto=extrai_pacote(com1=com1)
-            # Encerra comunicação
-            print(index)
-            print(numero)
-            print(total)
-            print(correto)
+            
+            #print(index)
+            #print(numero)
+            #print(total)
+            #print(correto)
 
             if numero==1 and correto==True:
                 payloads.append(payload)
@@ -148,6 +148,7 @@ def main():
                 com1.sendData(pacote)
                 start=time.time()
                 print (f'Progresso {arquivos_desejeados[index]}: {100*numero/total}%')
+                print("------------------------------------------------------------------------------------------------------------")
             else:
                 pacote=cria_pacote(index=0,total=0,nPacote=numero,payload=b'00')
                 com1.sendData(pacote)
