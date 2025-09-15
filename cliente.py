@@ -15,8 +15,6 @@ import time
 import numpy as np
 from preparar import extrai_pacote,cria_pacote
 from conversores import decimal_para_bytes_ieee754, bytes_ieee754_para_decimal
-import keyboard
-
 
 # voce deverá descomentar e configurar a porta com através da qual ira fazer comunicaçao
 #   para saber a sua porta, execute no terminal :
@@ -30,8 +28,6 @@ serialName = "COM3"                  # Windows(variacao de)  detectar sua porta 
 
 
 def main():
-
-    
     try:
         
         print("Iniciou o main")
@@ -116,21 +112,11 @@ def main():
             print("-------------------------")
             com1.disable()
 
-        pause=True
-        
-
-        index_ant=42
-        numero_ant=42
         payloads=[]
         arquivos_completos=0
         start=time.time()
         pacote=cria_pacote(index=1,total=0,nPacote=0,payload=b'00')
         while True:
-            if keyboard.is_pressed("a"):
-                print ("foi")
-                pause=True
-                time.sleep(0.1)
-
             while True:
                 buffer_len=com1.rx.getBufferLen()
                 now=time.time()
@@ -141,51 +127,32 @@ def main():
                     break
         
             index,payload,total,numero,correto=extrai_pacote(com1=com1)
-            com1.rx.clearBuffer()
-            print(index)
+            
+            #print(index)
             #print(numero)
             #print(total)
             #print(correto)
-            #print (payload)
-            
-            
-            
-            if index_ant!=index or numero!=numero_ant:
-                adicinar=True
 
             if numero==1 and correto==True:
                 payloads.append(payload)
-                adicinar=False
 
-            elif total>=numero and correto==True and adicinar==True:
+            elif total>=numero and correto==True:
                 payloads[index]=payloads[index]+payload
-                adicinar=False
             #envia se foi correto
             if numero==total and correto==True:
-
                 arquivos_completos+=1
                 print (f'Progresso {arquivos_desejeados[index]}: Completo!')
 
-            if correto==True and pause==False:
+            if correto==True:
                 pacote=cria_pacote(index=1,total=index,nPacote=numero,payload=b'00')
                 com1.sendData(pacote)
                 start=time.time()
                 print (f'Progresso {arquivos_desejeados[index]}: {100*numero/total}%')
                 print("------------------------------------------------------------------------------------------------------------")
-            elif correto==True and pause==True:
-                pacote=cria_pacote(index=2,total=index,nPacote=numero,payload=b'00')
-                com1.sendData(pacote)
-                while pause==True:
-                    if keyboard.is_pressed("a"):
-                        pause=False
-                        print("relese")
-                        pacote=cria_pacote(index=1,total=index,nPacote=numero,payload=b'00')
-                        com1.sendData(pacote)
             else:
                 pacote=cria_pacote(index=0,total=total,nPacote=numero,payload=b'00')
                 com1.sendData(pacote)
-            index_ant=index
-            numero_ant=numero
+            
             if len(arquivos_desejeados)==arquivos_completos:
                 break
         print("------------------------------------------------------------------------------------------------------------")
