@@ -39,13 +39,18 @@ def main():
         rx, nrx = com1.getData(tamanho)
         print(rx)
         # Ativa comunicacao. Inicia os threads e a comunicação seiral 
-        txBuffer=int.to_bytes(4)
+        txBuffer=int.to_bytes(9)
         com1.sendData(txBuffer)
         time.sleep(.1)
         arquivo1="whatsapp"
-        arquivo2="youtube"
+        arquivo2="YouTubeMusic"
         arquivo3="oiii"
-        arquivo4="Fruta"
+        arquivo4="camarao"
+        arquivo5="estrela"
+        arquivo6="nintendo"
+        arquivo7="Palmeiras"
+        arquivo8="xbox"
+        arquivo9="pokebola"
         arquivo1Bytes=arquivo1.encode('utf-8')
         tamanho1=int.to_bytes(len(arquivo1Bytes)) 
         arquivo2Bytes=arquivo2.encode('utf-8')
@@ -54,6 +59,16 @@ def main():
         tamanho3=int.to_bytes(len(arquivo3Bytes))
         arquivo4Bytes=arquivo4.encode('utf-8')
         tamanho4=int.to_bytes(len(arquivo4Bytes))
+        arquivo5Bytes=arquivo5.encode('utf-8')
+        tamanho5=int.to_bytes(len(arquivo5Bytes))
+        arquivo6Bytes=arquivo6.encode('utf-8')
+        tamanho6=int.to_bytes(len(arquivo6Bytes))
+        arquivo7Bytes=arquivo7.encode('utf-8')
+        tamanho7=int.to_bytes(len(arquivo7Bytes))
+        arquivo8Bytes=arquivo8.encode('utf-8')
+        tamanho8=int.to_bytes(len(arquivo8Bytes))
+        arquivo9Bytes=arquivo9.encode('utf-8')
+        tamanho9=int.to_bytes(len(arquivo9Bytes))
         com1.sendData(tamanho1)
         time.sleep(.1)
         com1.sendData(arquivo1Bytes)
@@ -70,7 +85,26 @@ def main():
         time.sleep(.1)
         com1.sendData(arquivo4Bytes)
         time.sleep(.1)
-        
+        com1.sendData(tamanho5)
+        time.sleep(.1)
+        com1.sendData(arquivo5Bytes)
+        time.sleep(.1)
+        com1.sendData(tamanho6)
+        time.sleep(.1)
+        com1.sendData(arquivo6Bytes)
+        time.sleep(.1) 
+        com1.sendData(tamanho7)
+        time.sleep(.1)
+        com1.sendData(arquivo7Bytes)
+        time.sleep(.1)
+        com1.sendData(tamanho8)
+        time.sleep(.1)
+        com1.sendData(arquivo8Bytes)
+        time.sleep(.1)
+        com1.sendData(tamanho9)
+        time.sleep(.1)
+        com1.sendData(arquivo9Bytes)
+        time.sleep(.1)       
         # rebendo qual
         rx,nrx = com1.getData(1)
         time.sleep(.1)
@@ -92,9 +126,10 @@ def main():
         for i in lista:
             palavra=i.decode(encoding="utf-8")
             print("-------------------------")
-            print(f"palavra{palavra}")
+            print(f"palavra {palavra}")
             listaString.append(palavra)
         mandando=f"Arquivos selecionados: {listaString}\n mandando..."
+        print(mandando)
         mandando=mandando.encode('utf-8')
         tamanhomandar=int.to_bytes(len(mandando))
         com1.sendData(tamanhomandar)
@@ -113,15 +148,30 @@ def main():
                 if  nome=="whatsapp":
                     codigo = dividir("imgs\\whatsapp.png")
                     dicio['0']=codigo
-                elif nome=="youtube":
-                    codigo = dividir("imgs\\Youtube.png")
+                elif nome=="YouTubeMusic":
+                    codigo = dividir("imgs\\YouTubeMusic.png")
                     dicio['1']=codigo
                 elif nome=="oiii":
                     codigo = dividir("imgs\\oiii.png")
                     dicio['2']=codigo
-                elif nome=="Fruta":
-                    codigo = dividir("imgs\\Fruta.png")
+                elif nome=="camarao":
+                    codigo = dividir("imgs\\camarao.png")
                     dicio['3']=codigo
+                elif nome=="estrela":
+                    codigo = dividir("imgs\\estrela.png")
+                    dicio['4']=codigo
+                elif nome=="nintendo":
+                    codigo = dividir("imgs\\nintendo.png")
+                    dicio['5']=codigo
+                elif nome=="Palmeiras":
+                    codigo = dividir("imgs\\Palmeiras.png")
+                    dicio['6']=codigo
+                elif nome=="xbox":
+                    codigo = dividir("imgs\\xbox.png")
+                    dicio['7']=codigo
+                elif nome=="pokebola":
+                    codigo = dividir("imgs\\pokebola.png")
+                    dicio['8']=codigo
             # print(dicio.keys())
             max=0
             for n,t in dicio.items():
@@ -148,31 +198,34 @@ def main():
                     else:
                         print("-------------------------\n")
                         print(f"index {i}, tamanho {len(n)}")   
-                        print(com1.rx.getBufferLen)            
                         pacote=cria_pacote(a,len(n),i+1,n[i])
                         com1.sendData(pacote)
                         time.sleep(.1)
                         tempoInicial = time.time()
                         tempoFinal = time.time()
-                        print(tempoFinal)
+                        index=3
+                        print(index)
+                        com1.rx.clearBuffer()    
                         index, payload, total, numero, correto = extrai_pacote(com1=com1)
-                        print(com1.rx.getBufferLen)
-                        print(f"index1 {index}")            
-                        if (index == 0) or (numero != (i+1)):
+                        # if (index )
+                        if (index == 0) or (numero != (i+1)) or (a!=total):
+                            i =numero-1
+                            a=total
                             while True:
-                                i =numero
                                 pacote=cria_pacote(a,len(n),i+1,n[i])
                                 com1.sendData(pacote)
                                 time.sleep(.1)
                                 index, payload, total, numero, correto = extrai_pacote(com1=com1)            
-                                print(f"index2 {index}")
                                 if index == 1:
-                                    break 
-                        elif index ==1:
+                                    break
+                        if index == 2:
+                            i=i-1
+                            print(f"index {i}, tamanho {len(n)}----------")   
+                            print("pausou")
+                            pass
+                        if index ==1:
+                            print(f"index {index}, t0 {tempoInicial} tf {tempoFinal}, arquivo{total}, meu arquivo{a}")
                             a+=1
-                            index=3
-                            print(f"index3 {index}")
-                            com1.rx.clearBuffer()
                             pass
                         
                 i+=1
