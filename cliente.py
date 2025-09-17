@@ -12,6 +12,7 @@
 
 from enlace import *
 import time
+import keyboard
 import numpy as np
 from preparar import extrai_pacote,cria_pacote
 from conversores import decimal_para_bytes_ieee754, bytes_ieee754_para_decimal
@@ -111,12 +112,13 @@ def main():
             print("Comunicação encerrada")
             print("-------------------------")
             com1.disable()
-
+        pause=False
         payloads=[]
         arquivos_completos=0
         start=time.time()
         pacote=cria_pacote(index=1,total=0,nPacote=0,payload=b'00')
         while True:
+            
             while True:
                 buffer_len=com1.rx.getBufferLen()
                 now=time.time()
